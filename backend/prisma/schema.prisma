@@ -1,0 +1,215 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Student {
+  id                   String                 @id @default(uuid())
+  nisn                 String                 @unique
+  nomorIndukSiswa      String?
+  namaLengkap          String?
+  jenisKelamin         String?
+  tempatLahir          String?
+  tanggalLahir         DateTime?
+  agama                String?
+  kewarganegaraan      String?
+  anakKe               Int?
+  jumlahSaudara        Int?
+  bahasaDiRumah        String?
+  beratBadan           Float?
+  tinggiBadan          Float?
+  golonganDarah        String?
+  alamat               String?
+  tempatTinggal        String?
+  transportasiSekolah  String?
+  jarakKeSekolah       String?
+  waktuTempuh          Float?
+  pemegangPKH          Boolean?               @default(false)
+  nomorPKH             String?
+  noKontak             String?
+  fotoMasuk            String?
+  fotoKeluar           String?
+  classId              String?
+  class                Class?                 @relation(fields: [classId], references: [id])
+  createdAt            DateTime               @default(now())
+  orangTua             OrangTua[]
+  pendidikanSebelumnya PendidikanSebelumnya[]
+  keadaanJasmani       KeadaanJasmani[]
+  beasiswa             Beasiswa[]
+  mutasiSekolah        MutasiSekolah[]
+  kelulusan            Kelulusan[]
+  dropOut              DropOut[]
+  lainLain             LainLain[]
+  perilaku             Perilaku[]
+  pengembanganDiri     PengembanganDiri[]
+  prestasi             Prestasi[]
+  pelanggaran          Pelanggaran[]
+}
+
+model Class {
+  id       String    @id @default(uuid())
+  name     String
+  students Student[]
+}
+
+enum Role {
+  ADMIN
+  GURU
+  ORANG_TUA
+  KEPALA_SEKOLAH
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(ORANG_TUA)
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrangTua {
+  id                  String    @id @default(uuid())
+  idSiswa             String
+  tipe                String?   @default("Ayah") // Perbaikan: default string, bukan fungsi()
+  namaLengkap         String?
+  tempatLahir         String?
+  tanggalLahir        DateTime?
+  agama               String?
+  nik                 String?
+  pendidikanTerakhir  String?
+  kebutuhanKhusus     String?
+  pekerjaan           String?
+  penghasilanPerBulan Int?
+  alamat              String?
+  nomorTelepon        String?
+  student             Student   @relation(fields: [idSiswa], references: [id])
+}
+
+model PendidikanSebelumnya {
+  id                String    @id @default(uuid())
+  idSiswa           String
+  tanggalMasuk      DateTime?
+  kelasMasuk        String?
+  asalSekolah       String?
+  alamatAsalSekolah String?
+  nomorSttbIjazah   String?
+  tanggalSttbIjazah DateTime?
+  student           Student   @relation(fields: [idSiswa], references: [id])
+}
+
+model KeadaanJasmani {
+  id              String  @id @default(uuid())
+  idSiswa         String
+  tahunAjaran     String?
+  kelas           String?
+  beratBadan      Float?
+  tinggiBadan     Float?
+  penyakit        String?
+  kelainanJasmani String?
+  student         Student @relation(fields: [idSiswa], references: [id])
+}
+
+model Beasiswa {
+  id          String   @id @default(uuid())
+  idSiswa     String
+  tahunAjaran String?
+  kelas       String?
+  pip         Boolean? @default(false)
+  bosda       Boolean? @default(false)
+  prestasi    String?
+  jumlah      Int?
+  student     Student  @relation(fields: [idSiswa], references: [id])
+}
+
+model MutasiSekolah {
+  id                  String    @id @default(uuid())
+  idSiswa             String
+  nomorSurat          String?
+  tanggal             DateTime?
+  kelasDitinggalkan   String?
+  alasan              String?
+  npsnSekolahTujuan   String?
+  nssSekolahTujuan    String?
+  alamatSekolahTujuan String?
+  student             Student   @relation(fields: [idSiswa], references: [id])
+}
+
+model Kelulusan {
+  id                     String    @id @default(uuid())
+  idSiswa                String
+  tanggalTamat           DateTime?
+  nomorIjazah            String?
+  nomorSKHUN             String?
+  melanjutkanKe          String?
+  namaSekolahTujuan      String?
+  alamatSekolahTujuan    String?
+  alasanTidakMelanjutkan String?
+  student                Student   @relation(fields: [idSiswa], references: [id])
+}
+
+model DropOut {
+  id      String    @id @default(uuid())
+  idSiswa String
+  tanggal DateTime?
+  kelas   String?
+  alasan  String?
+  student Student   @relation(fields: [idSiswa], references: [id])
+}
+
+model LainLain {
+  id             String  @id @default(uuid())
+  idSiswa        String
+  catatanPenting String?
+  student        Student @relation(fields: [idSiswa], references: [id])
+}
+
+model Perilaku {
+  id             String  @id @default(uuid())
+  idSiswa        String
+  kelas          String?
+  tahunPelajaran String?
+  uraianPerilaku String?
+  ttdWaliKelas   String?
+  student        Student @relation(fields: [idSiswa], references: [id])
+}
+
+model PengembanganDiri {
+  id                     String  @id @default(uuid())
+  idSiswa                String
+  kelas                  String?
+  tahunPelajaran         String?
+  uraianPengembanganDiri String?
+  ttdWaliKelas           String?
+  student                Student @relation(fields: [idSiswa], references: [id])
+}
+
+model Prestasi {
+  id        String  @id @default(uuid())
+  idSiswa   String
+  judul     String?
+  deskripsi String?
+  tahun     Int?
+  student   Student @relation(fields: [idSiswa], references: [id])
+}
+
+model Pelanggaran {
+  id          String    @id @default(uuid())
+  idSiswa     String
+  pelanggaran String?
+  sanksi      String?
+  tanggal     DateTime?
+  student     Student   @relation(fields: [idSiswa], references: [id])
+}
