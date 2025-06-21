@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import SiswaDetailModal from "./siswa-detail-modal";
+// import SiswaDetailModal from "./siswa-detail-modal";
 import RelasiDetailModal from "./relasi-detail-modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -29,8 +29,14 @@ const RELASI = [
   { key: "pelanggaran", label: "Pelanggaran" },
 ];
 
-export default function SiswaTable({ siswaList, onEdit }: { siswaList: Student[]; onEdit: (siswa: Student) => void }) {
-  const [selected, setSelected] = React.useState<Student | null>(null);
+export default function SiswaTable({
+  siswaList,
+  onEdit,
+}: {
+  siswaList: Student[];
+  onEdit: (siswa: Student) => void;
+}) {
+  // const [selected, setSelected] = React.useState<Student | null>(null);
   const [relasiModal, setRelasiModal] = React.useState<{
     siswa: Student;
     relasiKey: string;
@@ -40,7 +46,7 @@ export default function SiswaTable({ siswaList, onEdit }: { siswaList: Student[]
   const queryClient = useQueryClient();
 
   const hapusSiswa = useMutation({
-    mutationFn: (id: string) => api.delete(`/students/${id}`),
+    mutationFn: (id: string) => api.delete(`/siswa/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-siswa-list"] });
     },
@@ -63,7 +69,6 @@ export default function SiswaTable({ siswaList, onEdit }: { siswaList: Student[]
               <TableHead>Jenis Kelamin</TableHead>
               <TableHead>Tempat, Tanggal Lahir</TableHead>
               <TableHead>Kelas</TableHead>
-              {/* Kolom relasi */}
               {RELASI.map((r) => (
                 <TableHead key={r.key}>{r.label}</TableHead>
               ))}
@@ -82,7 +87,7 @@ export default function SiswaTable({ siswaList, onEdit }: { siswaList: Student[]
                     ? new Date(siswa.tanggalLahir).toLocaleDateString()
                     : "-"}
                 </TableCell>
-                <TableCell>{siswa.class?.name ?? "-"}</TableCell>
+                <TableCell>{siswa.kelas ?? "-"}</TableCell>
                 {/* Kolom relasi, tombol Detail */}
                 {RELASI.map((r) => (
                   <TableCell key={r.key}>
@@ -118,20 +123,25 @@ export default function SiswaTable({ siswaList, onEdit }: { siswaList: Student[]
                   >
                     {hapusSiswa.isPending ? "Menghapus..." : "Hapus"}
                   </Button>
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto ml-2"
-                    onClick={() => setSelected(siswa)}
+                  <a
+                    href={`/siswa/${siswa.id}/pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-blue-600 underline"
                   >
                     Detail Siswa
-                  </Button>
+                  </a>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      <SiswaDetailModal siswa={selected} open={!!selected} onClose={() => setSelected(null)} />
+      {/* <SiswaDetailModal
+        idSiswa={selected?.id || ""}
+        open={!!selected}
+        onClose={() => setSelected(null)}
+      /> */}
       <RelasiDetailModal
         open={!!relasiModal}
         siswa={relasiModal?.siswa}

@@ -13,7 +13,7 @@ export default function SiswaList() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-siswa-list", search],
     queryFn: () =>
-      api.get("/students", { params: { q: search } }).then((res) => res.data.data),
+      api.get("/siswa", { params: { q: search } }).then((res) => res.data.data),
   });
 
   return (
@@ -23,7 +23,7 @@ export default function SiswaList() {
         <div className="flex gap-2">
           <input
             className="border px-2 py-1 rounded"
-            placeholder="Cari nama/NISN..."
+            placeholder="Cari nama/NISN/Kelas..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -44,10 +44,8 @@ export default function SiswaList() {
         />
       )}
 
-      {/* Modal Tambah */}
       <SiswaFormModal open={showCreate} onClose={() => setShowCreate(false)} />
 
-      {/* Modal Edit */}
       <SiswaFormModal
         open={!!editSiswa}
         onClose={() => setEditSiswa(null)}

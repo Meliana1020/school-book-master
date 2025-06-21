@@ -17,6 +17,7 @@ import {
     nisn: string;
     nomorIndukSiswa: string;
     namaLengkap: string;
+    kelas: string;
     jenisKelamin: string;
     tempatLahir: string;
     tanggalLahir?: string;
@@ -61,6 +62,7 @@ import {
             nisn: "",
             nomorIndukSiswa: "",
             namaLengkap: "",
+            kelas: "",
             jenisKelamin: "",
             tempatLahir: "",
             tanggalLahir: "",
@@ -91,8 +93,8 @@ import {
     const mutation = useMutation({
       mutationFn: (data: any) =>
         isEdit
-          ? api.patch(`/students/${siswa?.id}`, data)
-          : api.post("/students", data),
+          ? api.patch(`/siswa/${siswa?.id}`, data)
+          : api.post("/siswa", data),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["admin-siswa-list"] });
         onClose();
@@ -114,6 +116,7 @@ import {
                 nisn: "",
                 nomorIndukSiswa: "",
                 namaLengkap: "",
+                kelas: "",
                 jenisKelamin: "",
                 tempatLahir: "",
                 tanggalLahir: "",
@@ -156,6 +159,7 @@ import {
         "nisn",
         "nomorIndukSiswa",
         "namaLengkap",
+        "kelas",
         "jenisKelamin",
         "tempatLahir",
         "agama",
@@ -193,6 +197,7 @@ import {
             <Input {...register("nomorIndukSiswa", { required: true })} placeholder="Nomor Induk Siswa *" />
             <Input {...register("namaLengkap", { required: true })} placeholder="Nama Lengkap *" />
             <Input {...register("jenisKelamin", { required: true })} placeholder="Jenis Kelamin *" />
+            <Input {...register("kelas", { required: true })} placeholder="Kelas *" />
             <Input {...register("tempatLahir", { required: true })} placeholder="Tempat Lahir *" />
             <Input {...register("tanggalLahir")} type="date" placeholder="Tanggal Lahir" />
             <Input {...register("agama", { required: true })} placeholder="Agama *" />

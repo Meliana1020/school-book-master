@@ -17,6 +17,7 @@ export interface Class {
     nomorIndukSiswa?: string;
     namaLengkap?: string;
     jenisKelamin?: string;
+    kelas?: string;
     tempatLahir?: string;
     tanggalLahir?: string;
     agama?: string;
