@@ -18,6 +18,9 @@ export class CreateStudentDto {
   namaLengkap: string;
 
   @IsString()
+  kelas: string;
+
+  @IsString()
   jenisKelamin: string;
 
   @IsString()

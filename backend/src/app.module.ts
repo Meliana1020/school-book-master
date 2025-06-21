@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StudentsModule } from './students/students.module';
+import { SiswaModule } from './siswa/siswa.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
@@ -21,7 +21,7 @@ import { PelanggaranModule } from './pelanggaran/pelanggaran.module';
 import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [StudentsModule, PrismaModule, AuthModule, UsersModule, OrangTuaModule, PendidikanSebelumnyaModule, KeadaanJasmaniModule, BeasiswaModule, MutasiSekolahModule, KelulusanModule, DropOutModule, LainLainModule, PerilakuModule, PengembanganDiriModule, PrestasiModule, PelanggaranModule, AdminModule],
+  imports: [SiswaModule, PrismaModule, AuthModule, UsersModule, OrangTuaModule, PendidikanSebelumnyaModule, KeadaanJasmaniModule, BeasiswaModule, MutasiSekolahModule, KelulusanModule, DropOutModule, LainLainModule, PerilakuModule, PengembanganDiriModule, PrestasiModule, PelanggaranModule, AdminModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

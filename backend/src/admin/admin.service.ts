@@ -7,7 +7,7 @@ export class AdminService {
 
   async getDashboard() {
     const [siswa, guru, mutasi] = await Promise.all([
-      this.prisma.student.count(),
+      this.prisma.siswa.count(),
       this.prisma.user.count({ where: { role: 'GURU' } }),
       this.prisma.mutasiSekolah.count(),
     ]);

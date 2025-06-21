@@ -3,11 +3,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class StudentsService {
+export class SiswaService {
   constructor(private prisma: PrismaService) {}
 
   async getRekapSiswa(id: string) {
-    return this.prisma.student.findUnique({
+    return this.prisma.siswa.findUnique({
       where: { id },
       include: {
         orangTua: true,
@@ -26,9 +26,9 @@ export class StudentsService {
     })
   }
 
-  async create(data: Prisma.StudentCreateInput) {
+  async create(data: Prisma.SiswaCreateInput) {
     try {
-      return await this.prisma.student.create({ data });
+      return await this.prisma.siswa.create({ data });
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -40,22 +40,32 @@ export class StudentsService {
     }
   }  
 
-  findAll() {
-    return this.prisma.student.findMany();
+  async findAll(q?: string) {
+    return this.prisma.siswa.findMany({
+      where: q
+        ? {
+            OR: [
+              { namaLengkap: { contains: q, mode: 'insensitive' } },
+              { nisn: { contains: q, mode: 'insensitive' } },
+              { kelas: { contains: q, mode: 'insensitive' } },
+            ],
+          }
+        : undefined,
+    });
   }
 
   findOne(id: string) {
-    return this.prisma.student.findUnique({ where: { id } });
+    return this.prisma.siswa.findUnique({ where: { id } });
   }
 
-  update(id: string, data: Prisma.StudentUpdateInput) {
-    return this.prisma.student.update({
+  update(id: string, data: Prisma.SiswaUpdateInput) {
+    return this.prisma.siswa.update({
       where: { id },
       data,
     });
   }
 
   remove(id: string) {
-    return this.prisma.student.delete({ where: { id } });
+    return this.prisma.siswa.delete({ where: { id } });
   }
 }
